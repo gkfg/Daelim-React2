@@ -1,3 +1,15 @@
+# 202230336 최주형
+
+## 2026.09.23
+### Link Component
+### nested route(중첩 라우트)
+* **정의**: 다중 URL 세그먼트로 구성된 라우트.
+- 예시: /blog/[slug] 경로는 세 개의 세그먼트로 구성된다.
+1. / (Root Segment)
+2. blog (Segment)
+3. [slug] (Leaf Segment)
+
+* **Nest.js**: 폴더는 URL 세그먼트에 매핑되는 경로 세그먼트를 정의하는데 사용된다.
 ## 2026.09.16
 ### await
 ```ts
