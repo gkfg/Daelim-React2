@@ -2,6 +2,107 @@
 
 ## 2026.10.14
 
+### client component 사용
+
+- 파일의 맨 위, import 문 위에 "use client" 지시문을 추가하여 client component를 생성할 수 있다.
+- use client는 server와 client 모듈 트리 사이의 경계를 선언하는데 사용
+
+| 비교항목    | JSON                                   | Binary(RSC)                                                 |
+| :---------- | :------------------------------------- | :---------------------------------------------------------- |
+| 크기        | 크다                                   | 작다                                                        |
+| 파싱 속도   | 느리다                                 | 빠르다                                                      |
+| 구조 표현력 | 문자열, 숫자, 불리언, 객체, 배열, null | 이미지, 오디오, 비디오, 구조화된 컴파일 데이터 등 제한 없음 |
+
+### next.js에서 server와 client component는 어떻게 동작하나
+
+2. 2-2. client component의 작동
+
+- html은 사용자에게 경로의 비대화형 미리보기를 즉시 보여주는데 사용
+- RSC 페이로드는 client와 server component트리를 조정하는데 사용
+- JS는 client component를 hydration하고, 애플리케이션을 대화형으로 만드는데 사용
+
+#### Hydration이란?
+
+- 이벤트 핸들러를 DOM에 연결하여 정적 HTML을 인터랙티브하게 만드는 React의 프로세슨
+
+1. 2-1.server component의 작동
+
+- next.js는 server에서 React의 API를 사용하여 렌더링을 조절
+- 개별 라우팅 세그먼트 별 묶음으로 나뉨
+
+- server component는 RSC Payload(React Server Component Payload)라는 특수한 데이터 형식으로 렌더링 된다.
+- client component와 RSC Payload는 HTML을 머리 렌더링 하는데 사용된다
+
+### Falsy
+
+- 프로그래밍 언어, 특히 JS에서 조건문이나 논리 연산 등 Boolean 값이 필요한 맥락에서 false로 평가되는 값
+- false만 아니라 다양한 false에 해당하는 값을 포괄하는 개념
+- 거짓 같은 값(Falsy 혹은 falsey)은 Boolean 문맥에서 false 로 평가되는 값
+
+(예시)
+
+1. false: 불리언 false 값 자체
+2. 0: 0은 false로 취급
+3. (빈 문자열): 문자열이 비어있는 경우 false
+4. null: 값이 없음을 의도적으로 명시
+5. undefined: 값이 할당되지 않았을때
+6. NaN: Not-a-Number, 숫자가 아님을 나타냄
+
+### NULL 병합 연산자
+
+- 왼쪽 피연산자가 null또는 undefined이면 오른쪽 값을 반환하고 아니면 왼쪽 반환
+
+```JS
+const [count, setCount] = useState<number>(like ?? 0)
+```
+
+### 비관적 업데이트
+
+- 이벤트가 발행하면 먼저 서버에 요청을 보내고 성공 응답을 받은 후에만 클라이언트에 UI 업데이트
+
+1. 장점
+
+- 데이터 일관성 보장
+- 오류가 발생할 가능성이 낮고, 잘못된 정보가 표시될 염려 없음
+
+2. 단점
+
+- 사용자는 서버의 응답을 기다려야한다.
+-
+
+### 낙관적 업데이트
+
+- 사용자에 의해 이벤트가 발생하면, 서버 응답을 기다리지 않고 즉시 업데이트
+- 서버에 보낸 요청의 성공을 낙관(성공한다) 가정해서 먼저 화면에 변화
+- 서버에 응답이 없다면 UI RoolBack
+- 네트워크 지연에도 빠르게 반응하듯 느끼게 하는것이 목적
+
+1. 장점
+
+- 서버 응답 속도와 관계없이 즉각적인 피드백을 제공
+- 네트워크 상태가 나쁘거나 응답이 길어도 사용자에게 체감되는 속도가 빠름
+
+2. 단점
+
+- 서버에서 오류 발생 시 사용자에게는 잠시 잘못된 정보가 표시될 수 있습니다.
+- 오류 발생 시 복구 로직이 필요
+
+### server 및 client component를 사용하는 시기
+
+1. client component
+
+- state, event handler, onClick, onChange
+- Lifecycle logic -> useEffect
+- 브라우저 전용 api -> localStorage, window, Navigator.geolocation 등
+- 사용자 정의 Hook
+
+2. server component
+
+- 서버의 데이터베이스 혹은 api에서 data를 가져오는 경우
+- API key, token 및 기타 보안 데이터를 client에 노출하지 않고 사용
+- 브라우저로 전송되는 JS의 양을 줄이고 싶을 때
+- 콘텐츠가 포함된 첫 번째 페인트(First Contentful Paint-FCP)를 개선하고 콘텐츠를 client에 점진적으로 스트리밍 할 때
+
 ## 2026.10.7
 
 ### 네이티브 히스토리 API
