@@ -1,7 +1,15 @@
 import type { NextConfig } from "next";
 
+/** @type {import('next').NextConfig} */
+
 const nextConfig: NextConfig = {
-  devIndicators: false,
+  /** Disable development indicators */
+  //devIndicators: true,
 };
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: process.env.ANALYZE === 'true',
+  });
+
+  module.exports = withBundleAnalyzer(nextConfig);
 
 export default nextConfig;
