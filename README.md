@@ -1,5 +1,16 @@
 # 202230336 최주형
 
+## 2026.10.28
+
+### JS bundle 크기 줄이기
+
+- UI의 큰 부분을 client component로 표시하는 대신 특정 대화형 component에 "use client"를 추가한다.
+- <Search />는 사용자와의 상호작용이 바로 이루어질 가능성이 있기 때문에 Client Component로 사용하고, <Logo />는 상대적으로 중요하지 않고 이미지 등 용량이 크기 때문에 Server Component로 사용하는 것이 좋음
+
+전체적인 실전 코드작업
+
+###
+
 ## 2026.10.14
 
 ### client component 사용
