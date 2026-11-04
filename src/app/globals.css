@@ -24,3 +24,18 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+html[data-theme="dark"] {
+  background: #0a0a0a;
+  color: #ededed;
+  transition:
+    background 0.5s,
+    color 0.5s;
+}
+html[data-theme="light"] {
+  background: #ffffff;
+  color: #171717;
+  transition:
+    background 0.5s,
+    color 0.5s;
+}

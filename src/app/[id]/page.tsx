@@ -1,5 +1,5 @@
 import LikeButton from "@/ui/LikeButton";
-import { posts } from "@lib/data";
+import { posts } from "@/lib/data";
 import { notFound } from "next/navigation";
 
 export default async function PostPage({
