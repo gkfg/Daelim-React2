@@ -1,5 +1,85 @@
 # 202230336 최주형
 
+## 2026.11.11
+
+### 외부(서드 파티) component
+
+- client 전용 기능에 의존하는 외부 component를 사용하는 경우, 해당 component를 client component에 래핑하여 예상대로 작동하는지 확인할 수 있습니다.
+- 예를 들어, <Carousel />은 acme-carousel 패키지에서 가져올 수 있습니다.
+- 이 component는 useState를 사용하지만 "use client"지시문은 없습니다
+- client component 내에서 <Carousel />을 사용하면 예상대로 작동합니다.
+- 그러나 server component 내에서 직접 사용하려고 하면 오류가 발생
+- 이는 Next.js가 <Carousel /> 이 client 전용 기능을 사용하고 있다는 것을 알지 못하기 때문
+- 이 문제를 해결하려면 client 전용 기능에 의존하는 외부 component를 자체 client component로 래핑할 수 있다
+
+### Context Provider 동작 순서
+
+1. 사용자가 ThemeStatus의 버튼 클릭
+2. toggleTheme() 호출.
+3. Provider 내부의 setTheme이 실행되어 theme상태가 변경
+4. 상태 변경으로 Provider와 그 하위 컴포넌트들이 리렌더링되어 theme 값이 최신으로 반영됨
+5. useEffect가 실행되어 document.documentElement.dataset.theme 값도 갱신
+
+**순서도 형식**
+
+1. 앱 시작 / RootLayout 렌더
+
+- RootLayout이 렌더되고 ThemeProvider로 children을 감쌈
+
+2. Context생성(초기화)
+
+- ThemeContext = createContext(...)가 정의되어 있음
+
+3. Provider 인스턴스 생성
+
+- ThemeProvider 컴포넌트가 실행되어 내부 state(theme, setTheme) 생성(useState)
+- Provider의 value = {theme, toggleTheme}로 설정
+
+4. 하위 트리 렌더링
+
+- Provider로 감싼 children이 렌더됨. 이 하위 트리는 context에 접근 가능
+
+5. Consumer 사용: ThemeStatus 렌더
+
+- ThemeStatus가 렌더되어 useContext로 {theme, toggleTheme}를 가져옴
+
+6. 사용자 상호작용: 버튼 클릭
+
+- 사용자가 ThemeStatus의 버튼을 클릭하면 toggleTheme() 호출
+
+7. 상태 변경 내부 처리
+8. 부수효과 실행(useEffect)
+
+- theme 변경으로 ThemeProvider의 useEffect가 실행되어 document.documentElement.dataset.theme = theme로 설정
+
+9. 리렌더링 전파
+
+- state 변경으로 Provider와 그 하위 Consumenr 들이 최신 value를 받아 리랜더링됨.
+- ThemeStatus는 새 theme값을 받아 UI를 갱신
+  10 결과: 레이아웃/스타일 반영
+
+### Context Provider의 실행 과정
+
+1. Context 생성(theme-provider.tsx)
+
+- createContent(...)로 context 객체 만듦: 초기값은 provider가 없을 때 fallback값
+- 이 파일 내부에서 ThemeProvider 컴포넌트 정의
+
+* useState로 theme 상태를 관리
+* toggleTheme 함수는 setTheme을 호출해 상태를 변경
+* useEffect로 상태 변경 시 document.documentElement.dataset.theme에 값을 기록
+* ThemeContext.Provider에 value={{theme, toggleTheme}}를 넣고 children을 감싸줌
+
+2. Provider 배치(RootLayout)
+
+- RootLayout에서 ThemeProvider로 루트를 감싸줌
+- 이렇게하면 Provider 하위에 랜더링 되는 모든 컴포넌트들이 접근 가능
+
+3. Consumer 사용 (theme-status.tsx)
+
+- ThemeStatus는 'use clinet'로 클라이언트 컴포넌티이며, useContext를 사용해 value를 읽어 들임
+- UI에서는 theme값을 표시하고, 버튼 클릭 시 toggleTheme()을 호출함
+
 ## 2026.11.04
 
 ### Context란 무엇인가
