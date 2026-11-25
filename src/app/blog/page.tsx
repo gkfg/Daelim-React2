@@ -1,4 +1,4 @@
-import Posts from "@/components/Posts";
+import Posts from "@/ui/posts";
 import getPosts from "@/lib/getPosts";
 import { Suspense } from "react";
 
